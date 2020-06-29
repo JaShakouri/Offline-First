@@ -1,56 +1,23 @@
 package ir.jaShakouri.tuturial.view.activity
 
-import android.content.Context
-import android.util.Log
+import android.os.Bundle
+import androidx.appcompat.app.AppCompatActivity
+import androidx.databinding.DataBindingUtil
 import ir.jaShakouri.tuturial.R
-import ir.jaShakouri.tuturial.base.BaseActivity
-import ir.jaShakouri.tuturial.base.BasePresenter
-import ir.jaShakouri.tuturial.base.BaseView
-import ir.jaShakouri.tuturial.mvp.main.MainContract
-import ir.jaShakouri.tuturial.mvp.main.MainPresenter
+import ir.jaShakouri.tuturial.databinding.ActivityMainBinding
+import ir.jaShakouri.tuturial.viewModel.UserViewModel
 
-class MainActivity : BaseActivity(), MainContract.View {
+class MainActivity : AppCompatActivity() {
 
-    private val TAG = "MVP_MainActivity"
-    private val presenter = MainPresenter()
+    private val TAG = "MVVM_MainActivity"
 
-    override fun layout(): Int {
-        return R.layout.activity_main
-    }
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        val activityMainBinding: ActivityMainBinding =
+                DataBindingUtil.setContentView(this, R.layout.activity_main)
+        val userViewModel = UserViewModel(this)
+        activityMainBinding.user = userViewModel
 
-    override fun init() {
-    }
-
-    override fun view(): BaseView {
-        return this
-    }
-
-    override fun presenter(): BasePresenter {
-        return presenter
-    }
-
-    override fun showNews(newsList: List<Any>) {
-
-    }
-
-    override fun showProgress() {
-        Log.i(TAG, "showProgress")
-    }
-
-    override fun hideProgress() {
-        Log.i(TAG, "hideProgress")
-    }
-
-    override fun showError(errorMessage: String) {
-        Log.i(TAG, "showError $errorMessage")
-    }
-
-    override fun setPorogressIndicator(shouldShow: Boolean) {
-        Log.i(TAG, "setPorogressIndicator $shouldShow")
-    }
-
-    override fun context(): Context {
-        return context()
     }
 
 }

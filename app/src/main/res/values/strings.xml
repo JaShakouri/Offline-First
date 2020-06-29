@@ -1,3 +1,5 @@
 <resources>
-    <string name="app_name">MVP(Senior)</string>
+    <string name="app_name">MVVM(Junior)</string>
+    <string name="enter_your_name">Enter Your Name</string>
+    <string name="enter_your_phone">Enter Your Phone</string>
 </resources>

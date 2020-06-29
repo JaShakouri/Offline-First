@@ -1,19 +1,68 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context=".view.activity.MainActivity">
+<layout xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:bind="http://schemas.android.com/tools">
 
-    <TextView
-        android:id="@+id/main_tvTitle"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Hello World!"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+    <data>
 
-</android.support.constraint.ConstraintLayout>
+        <variable
+            name="user"
+            type="ir.jaShakouri.tuturial.viewModel.UserViewModel" />
+
+    </data>
+
+    <androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        tools:context=".view.activity.MainActivity">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:padding="@dimen/def_padding"
+            tools:context=".view.activity.MainActivity">
+
+            <EditText
+                android:id="@+id/main_EtName"
+                android:layout_width="match_parent"
+                android:layout_height="?attr/actionBarSize"
+                android:layout_marginTop="@dimen/def_margin"
+                android:background="@drawable/shape_user_item"
+                android:hint="@string/enter_your_name"
+                android:padding="@dimen/min_padding"
+                android:text="@={user.name}" />
+
+            <EditText
+                android:id="@+id/main_EtPhone"
+                android:layout_width="match_parent"
+                android:layout_height="?attr/actionBarSize"
+                android:layout_marginTop="@dimen/def_margin"
+                android:background="@drawable/shape_user_item"
+                android:hint="@string/enter_your_phone"
+                android:padding="@dimen/min_padding"
+                android:text="@={user.phone}" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/min_margin"
+                android:text="@{user.name + '\n' + user.phone}" />
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginTop="@dimen/min_margin"
+                android:background="@drawable/shape_user_item"
+                android:orientation="vertical"
+                android:overScrollMode="never"
+                android:padding="@dimen/min_padding"
+                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                bind:RecyclerViewUser="@{user.liveDataUserList}" />
+
+        </LinearLayout>
+
+    </androidx.core.widget.NestedScrollView>
+
+</layout>

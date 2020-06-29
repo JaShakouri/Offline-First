@@ -1,12 +1,9 @@
 package ir.jaShakouri.tuturial.model
 
-class User {
-
-    var fullName: String = ""
-    var email: String = ""
+class User constructor(var fullName: String, var phone: String) {
 
     override fun toString(): String {
-        return "$fullName\n$email"
+        return "$fullName\n$phone"
     }
 
 }
