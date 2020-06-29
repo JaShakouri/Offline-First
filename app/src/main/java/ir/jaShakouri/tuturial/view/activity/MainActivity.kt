@@ -1,28 +1,36 @@
 package ir.jaShakouri.tuturial.view.activity
 
-import android.os.Bundle
-import android.support.v7.app.AppCompatActivity
+import android.content.Context
 import android.util.Log
 import ir.jaShakouri.tuturial.R
-import ir.jaShakouri.tuturial.presenter.MainPresenter
-import kotlinx.android.synthetic.main.activity_main.*
+import ir.jaShakouri.tuturial.base.BaseActivity
+import ir.jaShakouri.tuturial.base.BasePresenter
+import ir.jaShakouri.tuturial.base.BaseView
+import ir.jaShakouri.tuturial.mvp.main.MainContract
+import ir.jaShakouri.tuturial.mvp.main.MainPresenter
 
-class MainActivity : AppCompatActivity(), MainPresenter.View {
+class MainActivity : BaseActivity(), MainContract.View {
 
-    private val TAG = "MainActivity"
+    private val TAG = "MVP_MainActivity"
+    private val presenter = MainPresenter()
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
-
-        val presenter = MainPresenter(this)
-        presenter.updateFullName("javad shakouri")
-        presenter.updateEmail("jashakouri@gmail.com")
-
+    override fun layout(): Int {
+        return R.layout.activity_main
     }
 
-    override fun updateView(info: String) {
-        main_tvTitle.text = info
+    override fun init() {
+    }
+
+    override fun view(): BaseView {
+        return this
+    }
+
+    override fun presenter(): BasePresenter {
+        return presenter
+    }
+
+    override fun showNews(newsList: List<Any>) {
+
     }
 
     override fun showProgress() {
@@ -33,5 +41,16 @@ class MainActivity : AppCompatActivity(), MainPresenter.View {
         Log.i(TAG, "hideProgress")
     }
 
+    override fun showError(errorMessage: String) {
+        Log.i(TAG, "showError $errorMessage")
+    }
+
+    override fun setPorogressIndicator(shouldShow: Boolean) {
+        Log.i(TAG, "setPorogressIndicator $shouldShow")
+    }
+
+    override fun context(): Context {
+        return context()
+    }
 
 }
