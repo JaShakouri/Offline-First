@@ -1,6 +1,7 @@
 package ir.jaShakouri.tuturial.viewModel
 
 import android.app.Application
+import android.net.Uri
 import androidx.databinding.BaseObservable
 import androidx.databinding.Bindable
 import android.util.Log
@@ -10,9 +11,12 @@ import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.RecyclerView
+import com.facebook.drawee.view.SimpleDraweeView
 import ir.jaShakouri.tuturial.BR
 import ir.jaShakouri.tuturial.data.model.FindResponse
+import ir.jaShakouri.tuturial.data.model.Location
 import ir.jaShakouri.tuturial.data.remote.repo.find.FindRepository
+import ir.jaShakouri.tuturial.utils.Utility
 import ir.jaShakouri.tuturial.view.adapter.FinderAdapter
 import retrofit2.Call
 import retrofit2.Callback
@@ -110,6 +114,25 @@ class FindViewModel(app: Application) : BaseObservable() {
             progressLiveData.observe(view.context as LifecycleOwner, Observer {
                 view.visibility = it
             })
+
+        }
+
+        @JvmStatic
+        @BindingAdapter("bind:imageLoader")
+        fun imageLoaderBinder(
+            imageView: SimpleDraweeView,
+            location: Location
+        ) {
+
+            val image = Utility.latLangConverter(
+                location.lat!!,
+                location.lng!!,
+                400,
+                400,
+                18
+            )
+
+            imageView.setImageURI(Uri.parse(image))
 
         }
 

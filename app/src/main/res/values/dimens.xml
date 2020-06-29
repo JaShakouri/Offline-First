@@ -13,4 +13,9 @@
     <dimen name="min_width">100dp</dimen>
     <dimen name="min_height">100dp</dimen>
 
+    <dimen name="no_elevation">0dp</dimen>
+    <dimen name="small_elevation">2dp</dimen>
+    <dimen name="min_elevation">4dp</dimen>
+    <dimen name="def_elevation">8dp</dimen>
+
 </resources>

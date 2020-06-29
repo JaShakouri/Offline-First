@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout>
+<layout xmlns:bind="http://schemas.android.com/tools">
 
     <data class="ItemUserBinding">
 
@@ -8,71 +8,79 @@
             type="ir.jaShakouri.tuturial.data.model.Item" />
     </data>
 
-    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:fresco="http://schemas.android.com/apk/res-auto"
+    <androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="@dimen/min_margin"
-        android:background="@drawable/shape_main_item"
-        android:minHeight="@dimen/min_height_row">
+        android:minHeight="@dimen/min_height_row"
+        app:cardCornerRadius="@dimen/min_radius"
+        app:cardElevation="@dimen/no_elevation">
 
-        <LinearLayout
+        <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_centerInParent="true"
-            android:layout_toStartOf="@+id/imgView"
-            android:layout_toLeftOf="@+id/imgView"
-            android:orientation="vertical"
-            android:padding="@dimen/def_padding">
+            android:layout_height="match_parent">
 
-            <TextView
-                style="@style/style_def_textView"
-                android:layout_width="wrap_content"
-                android:layout_height="0dp"
-                android:layout_weight="1"
-                android:ellipsize="end"
-                android:maxLines="1"
-                android:text="@{item.venue.name}"
-                android:textColor="@android:color/black" />
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:layout_toStartOf="@+id/imgView"
+                android:layout_toLeftOf="@+id/imgView"
+                android:orientation="vertical"
+                android:padding="@dimen/def_padding">
 
-            <TextView
-                style="@style/style_def_textView"
-                android:layout_width="wrap_content"
-                android:layout_height="0dp"
-                android:layout_weight="1"
-                android:ellipsize="end"
-                android:maxLines="1"
-                android:text="@{item.venue.location.city}"
-                android:textColor="@android:color/black" />
+                <TextView
+                    style="@style/style_def_textView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="0dp"
+                    android:layout_weight="1"
+                    android:ellipsize="end"
+                    android:maxLines="1"
+                    android:text="@{item.venue.name}"
+                    android:textColor="@android:color/black" />
 
-            <TextView
-                style="@style/style_def_textView"
-                android:layout_width="wrap_content"
-                android:layout_height="0dp"
-                android:layout_weight="1"
-                android:ellipsize="end"
-                android:maxLines="1"
-                android:text="@{item.venue.location.country}"
-                android:textColor="@android:color/black" />
+                <TextView
+                    style="@style/style_def_textView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="0dp"
+                    android:layout_weight="1"
+                    android:ellipsize="end"
+                    android:maxLines="1"
+                    android:text="@{item.venue.location.city}"
+                    android:textColor="@android:color/black" />
 
-        </LinearLayout>
+                <TextView
+                    style="@style/style_def_textView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="0dp"
+                    android:layout_weight="1"
+                    android:ellipsize="end"
+                    android:maxLines="1"
+                    android:text="@{item.venue.location.country}"
+                    android:textColor="@android:color/black" />
 
-        <com.facebook.drawee.view.SimpleDraweeView
-            android:id="@+id/imgView"
-            android:layout_width="@dimen/min_width"
-            android:layout_height="@dimen/min_height"
-            android:layout_alignParentEnd="true"
-            android:layout_alignParentRight="true"
-            android:layout_margin="@dimen/min_margin"
-            fresco:actualImageScaleType="focusCrop"
-            fresco:failureImageScaleType="centerInside"
-            fresco:placeholderImageScaleType="fitCenter"
-            fresco:roundBottomLeft="true"
-            fresco:roundBottomRight="true"
-            fresco:roundTopLeft="true"
-            fresco:roundTopRight="true"
-            fresco:roundedCornerRadius="@dimen/min_radius" />
+            </LinearLayout>
 
-    </RelativeLayout>
+            <com.facebook.drawee.view.SimpleDraweeView
+                android:id="@+id/imgView"
+                android:layout_width="@dimen/min_width"
+                android:layout_height="@dimen/min_height"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentRight="true"
+                android:layout_margin="@dimen/min_margin"
+                app:actualImageScaleType="focusCrop"
+                app:failureImageScaleType="centerInside"
+                app:placeholderImageScaleType="fitCenter"
+                app:roundBottomLeft="true"
+                app:roundBottomRight="true"
+                app:roundTopLeft="true"
+                app:roundTopRight="true"
+                app:roundedCornerRadius="@dimen/min_radius"
+                bind:imageLoader="@{item.venue.location}" />
+
+        </RelativeLayout>
+
+    </androidx.cardview.widget.CardView>
 
 </layout>
