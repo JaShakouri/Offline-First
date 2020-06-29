@@ -4,29 +4,75 @@
     <data class="ItemUserBinding">
 
         <variable
-            name="user"
-            type="ir.jaShakouri.tuturial.viewModel.UserViewModel" />
+            name="item"
+            type="ir.jaShakouri.tuturial.data.model.Item" />
     </data>
 
-    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:fresco="http://schemas.android.com/apk/res-auto"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="@dimen/def_padding"
-        android:background="@drawable/shape_user_item"
-        android:orientation="vertical"
-        android:padding="@dimen/min_padding">
+        android:layout_margin="@dimen/min_margin"
+        android:background="@drawable/shape_main_item"
+        android:minHeight="@dimen/min_height_row">
 
-        <TextView
-            android:layout_width="wrap_content"
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@{user.name}" />
+            android:layout_centerInParent="true"
+            android:layout_toStartOf="@+id/imgView"
+            android:layout_toLeftOf="@+id/imgView"
+            android:orientation="vertical"
+            android:padding="@dimen/def_padding">
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/min_margin"
-            android:text="@{user.phone}" />
+            <TextView
+                style="@style/style_def_textView"
+                android:layout_width="wrap_content"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:ellipsize="end"
+                android:maxLines="1"
+                android:text="@{item.venue.name}"
+                android:textColor="@android:color/black" />
 
-    </LinearLayout>
+            <TextView
+                style="@style/style_def_textView"
+                android:layout_width="wrap_content"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:ellipsize="end"
+                android:maxLines="1"
+                android:text="@{item.venue.location.city}"
+                android:textColor="@android:color/black" />
+
+            <TextView
+                style="@style/style_def_textView"
+                android:layout_width="wrap_content"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:ellipsize="end"
+                android:maxLines="1"
+                android:text="@{item.venue.location.country}"
+                android:textColor="@android:color/black" />
+
+        </LinearLayout>
+
+        <com.facebook.drawee.view.SimpleDraweeView
+            android:id="@+id/imgView"
+            android:layout_width="@dimen/min_width"
+            android:layout_height="@dimen/min_height"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"
+            android:layout_margin="@dimen/min_margin"
+            fresco:actualImageScaleType="focusCrop"
+            fresco:failureImageScaleType="centerInside"
+            fresco:placeholderImageScaleType="fitCenter"
+            fresco:roundBottomLeft="true"
+            fresco:roundBottomRight="true"
+            fresco:roundTopLeft="true"
+            fresco:roundTopRight="true"
+            fresco:roundedCornerRadius="@dimen/min_radius" />
+
+    </RelativeLayout>
 
 </layout>

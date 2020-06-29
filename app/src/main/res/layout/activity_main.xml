@@ -5,64 +5,29 @@
     <data>
 
         <variable
-            name="user"
-            type="ir.jaShakouri.tuturial.viewModel.UserViewModel" />
+            name="viewModel"
+            type="ir.jaShakouri.tuturial.viewModel.FindViewModel" />
 
     </data>
 
-    <androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:tools="http://schemas.android.com/tools"
+    <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical"
-        tools:context=".view.activity.MainActivity">
+        android:layout_height="match_parent">
 
-        <LinearLayout
+        <androidx.recyclerview.widget.RecyclerView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="vertical"
-            android:padding="@dimen/def_padding"
-            tools:context=".view.activity.MainActivity">
+            android:overScrollMode="never"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+            bind:recycler="@{viewModel.liveDataListSuccessful}" />
 
-            <EditText
-                android:id="@+id/main_EtName"
-                android:layout_width="match_parent"
-                android:layout_height="?attr/actionBarSize"
-                android:layout_marginTop="@dimen/def_margin"
-                android:background="@drawable/shape_user_item"
-                android:hint="@string/enter_your_name"
-                android:padding="@dimen/min_padding"
-                android:text="@={user.name}" />
+        <ProgressBar
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            bind:visible="@{viewModel.progress}" />
 
-            <EditText
-                android:id="@+id/main_EtPhone"
-                android:layout_width="match_parent"
-                android:layout_height="?attr/actionBarSize"
-                android:layout_marginTop="@dimen/def_margin"
-                android:background="@drawable/shape_user_item"
-                android:hint="@string/enter_your_phone"
-                android:padding="@dimen/min_padding"
-                android:text="@={user.phone}" />
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/min_margin"
-                android:text="@{user.name + '\n' + user.phone}" />
-
-            <androidx.recyclerview.widget.RecyclerView
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_marginTop="@dimen/min_margin"
-                android:background="@drawable/shape_user_item"
-                android:orientation="vertical"
-                android:overScrollMode="never"
-                android:padding="@dimen/min_padding"
-                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-                bind:RecyclerViewUser="@{user.liveDataUserList}" />
-
-        </LinearLayout>
-
-    </androidx.core.widget.NestedScrollView>
+    </FrameLayout>
 
 </layout>

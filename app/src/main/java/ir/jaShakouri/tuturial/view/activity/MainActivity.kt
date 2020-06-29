@@ -5,7 +5,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import ir.jaShakouri.tuturial.R
 import ir.jaShakouri.tuturial.databinding.ActivityMainBinding
-import ir.jaShakouri.tuturial.viewModel.UserViewModel
+import ir.jaShakouri.tuturial.viewModel.FindViewModel
 
 class MainActivity : AppCompatActivity() {
 
@@ -14,10 +14,11 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         val activityMainBinding: ActivityMainBinding =
-                DataBindingUtil.setContentView(this, R.layout.activity_main)
-        val userViewModel = UserViewModel(this)
-        activityMainBinding.user = userViewModel
+            DataBindingUtil.setContentView(this, R.layout.activity_main)
 
+        val finderViewModel = FindViewModel(application)
+        activityMainBinding.viewModel = finderViewModel
+        finderViewModel.getItems("35.7523, 51.4449", "", 1)
     }
 
 }
