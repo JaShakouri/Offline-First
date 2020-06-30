@@ -2,13 +2,11 @@ package ir.jaShakouri.tuturial.base.recyclerView
 
 import androidx.recyclerview.widget.RecyclerView
 
-abstract class RvAdapter<T, E : RvViewHolder<T>>(var items: List<T>) :
+abstract class RvAdapter<T, E : RvViewHolder<T>>(var items: ArrayList<T>) :
     RecyclerView.Adapter<E>() {
 
-    companion object {
-        const val TYPE_Loading = 0
-        const val TYPE_Item = 1
-    }
+    val TYPE_Loading = 0
+    val TYPE_Item = 1
 
     override fun getItemViewType(position: Int): Int {
 
@@ -27,9 +25,10 @@ abstract class RvAdapter<T, E : RvViewHolder<T>>(var items: List<T>) :
             holder.bind(items[position])
     }
 
-    fun addView(items: List<T>) {
-        val position = this.items.size
-        notifyItemRangeInserted(position, items.size)
-        this.items.toMutableList().addAll(items)
+    fun addView(item: ArrayList<T>) {
+        val startPosition = items.size
+        this.items.addAll(item)
+        notifyItemRangeInserted(startPosition, item.size)
     }
+
 }

@@ -1,4 +1,4 @@
-package ir.jaShakouri.tuturial.view.adapter.find
+package ir.jaShakouri.tuturial.view.adapter
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -12,7 +12,7 @@ import ir.jaShakouri.tuturial.databinding.LoadingDataBinder
 import ir.jaShakouri.tuturial.view.vh.ItemViewHolder
 import ir.jaShakouri.tuturial.view.vh.LoadingViewHolder
 
-class FindAdapter(items: List<Item>) : RvAdapter<Item, RvViewHolder<Item>>(items) {
+class FindAdapter(items: ArrayList<Item>) : RvAdapter<Item, RvViewHolder<Item>>(items) {
 
     private var inflator: LayoutInflater? = null
 
