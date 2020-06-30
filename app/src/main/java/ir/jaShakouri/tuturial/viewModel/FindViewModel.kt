@@ -1,11 +1,10 @@
 package ir.jaShakouri.tuturial.viewModel
 
-import android.app.Application
 import android.net.Uri
-import androidx.databinding.BaseObservable
-import androidx.databinding.Bindable
 import android.util.Log
 import android.view.View
+import androidx.databinding.BaseObservable
+import androidx.databinding.Bindable
 import androidx.databinding.BindingAdapter
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.MutableLiveData
@@ -18,14 +17,12 @@ import ir.jaShakouri.tuturial.data.model.Location
 import ir.jaShakouri.tuturial.data.remote.repo.find.FindRepository
 import ir.jaShakouri.tuturial.utils.Utility
 import ir.jaShakouri.tuturial.view.adapter.FinderAdapter
+import ir.jaShakouri.tuturial.view.adapter.find.FindAdapter
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
-class FindViewModel(app: Application) : BaseObservable() {
-
-    private val TAG = "MVVM_UserViewModel"
-
+class FindViewModel : BaseObservable() {
 
     var liveDataListSuccessful = MutableLiveData<FindResponse>()
         @Bindable
@@ -49,41 +46,17 @@ class FindViewModel(app: Application) : BaseObservable() {
             notifyPropertyChanged(BR.progress)
         }
 
-    private var findViewModel: FindRepository? = null
-
-    init {
-        findViewModel = FindRepository(app)
-    }
-
-    fun getItems(
-        location: String, query: String, offset: Int
-    ) {
-
-        progress.postValue(View.VISIBLE)
-
-        findViewModel!!.getItems(location, query, offset)
-            .enqueue(object : Callback<FindResponse> {
-
-                override fun onResponse(
-                    call: Call<FindResponse>,
-                    response: Response<FindResponse>
-                ) {
-                    progress.postValue(View.GONE)
-                    liveDataListSuccessful.postValue(response.body())
-                }
-
-                override fun onFailure(call: Call<FindResponse>, t: Throwable) {
-                    liveDataListFailure.postValue(t.message)
-                    progress.postValue(View.GONE)
-                }
-
-            })
-
-    }
-
     companion object {
 
-        var adapter: FinderAdapter? = null
+        private val TAG = "MVVM_UserViewModel"
+
+        var adapter: FindAdapter? = null
+
+        var offset = 1
+        var isLastPage = false
+        var isLoading = false
+
+        var findViewModel: FindRepository = FindRepository()
 
         @JvmStatic
         @BindingAdapter("bind:recycler")
@@ -95,10 +68,39 @@ class FindViewModel(app: Application) : BaseObservable() {
             listLiveData.observe((rv.context as LifecycleOwner), Observer {
 
                 if (adapter == null) {
-                    adapter = FinderAdapter(it.response!!.groups!![0].items!!)
+
+                    adapter = FindAdapter(it.response!!.groups!![0].items!!)
                     rv.adapter = adapter
-                } else
-                    adapter!!.notifyDataSetChanged()
+
+                    /*
+                    rv.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+
+                        override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+
+                            if (!rv.canScrollVertically(1)) {
+
+                                isLastPage = adapter!!.itemCount >= it.response!!.totalResults!!
+
+                                if (!isLoading && !isLastPage) {
+                                    Log.i(TAG, "onScrolled: Can Not Scroll")
+                                    onLoadMore()
+                                } else {
+                                    Log.i(
+                                        TAG,
+                                        "onScrolled: isLoading $isLoading isLastPage $isLastPage"
+                                    )
+                                }
+
+                            }
+
+                        }
+                    })
+
+                     */
+
+                } else {
+                    adapter!!.addView(it.response!!.groups!![0].items!!)
+                }
 
             })
 
@@ -107,14 +109,11 @@ class FindViewModel(app: Application) : BaseObservable() {
         @JvmStatic
         @BindingAdapter("bind:visible")
         fun visibilityBinder(
-            view: View,
-            progressLiveData: MutableLiveData<Int>
+            view: View, progressLiveData: MutableLiveData<Int>
         ) {
-
             progressLiveData.observe(view.context as LifecycleOwner, Observer {
                 view.visibility = it
             })
-
         }
 
         @JvmStatic
@@ -135,6 +134,62 @@ class FindViewModel(app: Application) : BaseObservable() {
             imageView.setImageURI(Uri.parse(image))
 
         }
+
+        fun onLoadMore() {
+
+            isLoading = true
+            offset++
+
+            Log.i(TAG, "onLoadMore: $offset")
+
+        }
+
+    }
+
+    fun getItems() {
+
+        progress.postValue(View.VISIBLE)
+
+        findViewModel.getItems("35.7523, 51.4449", "", offset)
+            .enqueue(object : Callback<FindResponse> {
+
+                override fun onResponse(
+                    call: Call<FindResponse>,
+                    response: Response<FindResponse>
+                ) {
+                    progress.postValue(View.GONE)
+                    liveDataListSuccessful.postValue(response.body())
+                }
+
+                override fun onFailure(call: Call<FindResponse>, t: Throwable) {
+                    liveDataListFailure.postValue(t.message)
+                    progress.postValue(View.GONE)
+                }
+
+            })
+
+    }
+
+    private fun loadMore() {
+
+        findViewModel.getItems("35.7523, 51.4449", "", offset)
+            .enqueue(object : Callback<FindResponse> {
+
+                override fun onResponse(
+                    call: Call<FindResponse>,
+                    response: Response<FindResponse>
+                ) {
+                    isLoading = false
+                    liveDataListSuccessful.postValue(response.body())
+                }
+
+                override fun onFailure(call: Call<FindResponse>, t: Throwable) {
+                    isLoading = false
+                    offset--
+                    liveDataListFailure.postValue(t.message)
+                }
+
+            })
 
     }
 

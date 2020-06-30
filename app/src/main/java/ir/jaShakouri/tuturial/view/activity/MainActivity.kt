@@ -16,9 +16,9 @@ class MainActivity : AppCompatActivity() {
         val activityMainBinding: ActivityMainBinding =
             DataBindingUtil.setContentView(this, R.layout.activity_main)
 
-        val finderViewModel = FindViewModel(application)
+        val finderViewModel = FindViewModel()
         activityMainBinding.viewModel = finderViewModel
-        finderViewModel.getItems("35.7523, 51.4449", "", 1)
+        finderViewModel.getItems()
     }
 
 }

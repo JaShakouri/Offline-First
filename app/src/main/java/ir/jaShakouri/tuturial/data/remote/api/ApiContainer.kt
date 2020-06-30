@@ -3,6 +3,7 @@ package ir.jaShakouri.tuturial.data.remote.api
 import android.app.Application
 import android.content.Context
 import com.readystatesoftware.chuck.ChuckInterceptor
+import ir.jaShakouri.tuturial.app.AppClass
 import okhttp3.OkHttpClient
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
@@ -38,12 +39,12 @@ class ApiContainer {
             ApiInterface::class.java
         )
 
-        fun getInstance(app: Application): ApiInterface {
+        fun getInstance(): ApiInterface {
 
             if (okHttpClient == null)
                 okHttpClient =
                     okHttpClient(
-                        app.applicationContext
+                        AppClass.Instance.applicationContext
                     )
 
             if (retrofit == null)
