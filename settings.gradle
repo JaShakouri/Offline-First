@@ -1,2 +1,4 @@
-include ':app'
+include ':presentation'
+include ':domain'
+include ':data'
 rootProject.name = "JaShakouri Tuturial"
