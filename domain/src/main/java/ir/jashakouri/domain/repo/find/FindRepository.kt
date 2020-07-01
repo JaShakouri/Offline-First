@@ -5,5 +5,12 @@ import ir.jashakouri.domain.repo.BaseRepository
 import retrofit2.Call
 
 interface FindRepository : BaseRepository {
-    fun getItems(location: String, query: String, offset: Int): Call<FindResponse>
+    fun getItems(client_id: String,
+                 client_secret: String,
+                 mDateTime: String,
+                 mLocation: String,
+                 mQuery: String?,
+                 mLimit: Int,
+                 mOffset: Int,
+                 mMeter: Int): Call<FindResponse>
 }
