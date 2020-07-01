@@ -12,5 +12,5 @@ interface FindRepository : BaseRepository {
                  mQuery: String?,
                  mLimit: Int,
                  mOffset: Int,
-                 mMeter: Int): Call<FindResponse>
+                 mMeter: Int): Call<FindResponse>?
 }

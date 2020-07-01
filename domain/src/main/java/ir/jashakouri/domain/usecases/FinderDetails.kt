@@ -9,7 +9,7 @@ import java.util.*
 
 class FinderDetails constructor(private val repository: FindRepository) {
 
-    fun getItems(location: String, query: String, offset: Int): Call<FindResponse> {
+    fun getItems(location: String, query: String, offset: Int): Call<FindResponse>? {
 
         val sdf = SimpleDateFormat("yyyyMMdd", Locale.getDefault())
         val currentDate: String = sdf.format(Date())

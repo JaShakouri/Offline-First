@@ -13,11 +13,13 @@ import androidx.recyclerview.widget.RecyclerView
 import com.facebook.drawee.view.SimpleDraweeView
 import ir.jaShakouri.tuturial.BR
 import ir.jashakouri.domain.model.FindResponse
-import ir.jashakouri.domain.repo.find.FindRepository
 import ir.jaShakouri.tuturial.utils.Utility
 import ir.jaShakouri.tuturial.view.adapter.FindAdapter
 import ir.jashakouri.domain.model.Item
 import ir.jashakouri.domain.model.Location
+import ir.jashakouri.domain.usecases.FinderDetails
+import ir.jashakouri.presentation.api.ApiContainer
+import ir.jashakouri.presentation.repositories.FinderCloudDataSource
 import jp.wasabeef.recyclerview.adapters.ScaleInAnimationAdapter
 import retrofit2.Call
 import retrofit2.Callback
@@ -52,7 +54,8 @@ class FindViewModel : BaseObservable() {
 
         private val TAG = "MVVM_UserViewModel"
 
-        var findRepository = FindRepository()
+        var findRepository =
+            FinderDetails(FinderCloudDataSource(ApiContainer.getInstance()))
         var adapter: FindAdapter? = null
 
         var offset = 1
@@ -150,7 +153,7 @@ class FindViewModel : BaseObservable() {
 
         progress.postValue(View.VISIBLE)
 
-        findRepository.getItems("35.7523, 51.4449", "", offset)
+        findRepository.getItems("35.7523, 51.4449", "", offset)!!
             .enqueue(object : Callback<FindResponse> {
 
                 override fun onResponse(
@@ -175,7 +178,7 @@ class FindViewModel : BaseObservable() {
         isLoading = true
         offset++
 
-        findRepository.getItems("35.7523, 51.4449", "", offset)
+        findRepository.getItems("35.7523, 51.4449", "", offset)!!
             .enqueue(object : Callback<FindResponse> {
 
                 override fun onResponse(
