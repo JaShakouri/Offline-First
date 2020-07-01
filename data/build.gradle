@@ -25,9 +25,9 @@ android {
 
 dependencies {
     implementation fileTree(dir: "libs", include: ["*.jar"])
+    implementation project(':domain')
 
     debugImplementation "com.readystatesoftware.chuck:library:$chuk_version"
     releaseImplementation "com.readystatesoftware.chuck:library-no-op:$chuk_version"
 
-    implementation project(':domain')
 }
