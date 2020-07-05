@@ -3,6 +3,7 @@ package ir.jaShakouri.app.view.vm
 import android.net.Uri
 import android.util.Log
 import android.view.View
+import android.widget.TextView
 import androidx.databinding.BaseObservable
 import androidx.databinding.Bindable
 import androidx.databinding.BindingAdapter
@@ -19,7 +20,6 @@ import ir.jaShakouri.data.usecases.FinderRepository
 import ir.jaShakouri.domain.model.DataResponse
 import ir.jaShakouri.domain.model.Item
 import ir.jaShakouri.domain.model.Location
-import jp.wasabeef.recyclerview.adapters.ScaleInAnimationAdapter
 
 class FindViewModel : BaseObservable() {
 
@@ -44,6 +44,13 @@ class FindViewModel : BaseObservable() {
             notifyPropertyChanged(BR.liveDataListFailure)
         }
 
+    var liveDataListSize = MutableLiveData<String>().default("0")
+        @Bindable
+        set(value) {
+            field = value
+            notifyPropertyChanged(BR.liveDataListSize)
+        }
+
     var progress = MutableLiveData<Int>()
         @Bindable
         set(value) {
@@ -60,7 +67,7 @@ class FindViewModel : BaseObservable() {
 
     companion object {
 
-        private const val TAG = "MVVM_UserViewModel"
+        private const val TAG = "MVVM_FindViewModel"
 
         var adapter: FindAdapter? = null
         val findRepository = FinderRepository()
@@ -77,9 +84,9 @@ class FindViewModel : BaseObservable() {
             rv: RecyclerView,
             listLiveData: MutableLiveData<DataResponse>
         ) {
-
             listLiveData.observe((rv.context as LifecycleOwner), Observer {
                 adapter = FindAdapter(it.list as ArrayList<Item>, it.total)
+                rv.setItemViewCacheSize(2)
                 rv.adapter = adapter
                 rv.addOnScrollListener(object : RecyclerView.OnScrollListener() {
 
@@ -96,17 +103,6 @@ class FindViewModel : BaseObservable() {
                                 if (endList != null)
                                     endList!!.isEndList()
 
-                            } else {
-                                Log.i(
-                                    TAG,
-                                    "onScrolled: isLoading $isLoading isLastPage $isLastPage"
-                                )
-
-                                if (isLastPage)
-                                    adapter!!.notifyItemRemoved(
-                                        adapter!!.itemCount
-                                    )
-
                             }
 
                         }
@@ -114,7 +110,6 @@ class FindViewModel : BaseObservable() {
                     }
                 })
             })
-
         }
 
         @JvmStatic
@@ -177,8 +172,9 @@ class FindViewModel : BaseObservable() {
             .map {
                 progress.postValue(View.GONE)
                 liveDataListSuccessful.postValue(it)
-
+                liveDataListSize.postValue(it.list.size.toString())
             }.onErrorReturn {
+                Log.e(TAG, "getItems: $it")
                 liveDataListFailure.postValue(it.message)
                 progress.postValue(View.GONE)
             }.subscribe()
@@ -202,6 +198,7 @@ class FindViewModel : BaseObservable() {
                 liveDataListLoadMore.postValue(it)
                 isLoading = false
                 loadMoreProgress.postValue(View.GONE)
+                liveDataListSize.postValue(adapter!!.itemCount.toString())
 
             }.onErrorReturn {
 
@@ -209,6 +206,7 @@ class FindViewModel : BaseObservable() {
                 offset--
                 liveDataListFailure.postValue(it.message)
                 loadMoreProgress.postValue(View.GONE)
+                Log.e(TAG, "loadMore: $it")
 
             }.subscribe()
 

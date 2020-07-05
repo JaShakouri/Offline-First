@@ -6,5 +6,10 @@ import androidx.recyclerview.widget.RecyclerView
 abstract class RvViewHolder<A>(itemView: ViewDataBinding) :
     RecyclerView.ViewHolder(itemView.root) {
 
-    abstract fun bind(item: A)
+    abstract fun unbind()
+
+    abstract fun bind()
+
+    abstract fun setViewModel(item: A)
+
 }
