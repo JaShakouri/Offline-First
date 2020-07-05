@@ -2,22 +2,16 @@ package ir.jaShakouri.app.base.recyclerView
 
 import androidx.recyclerview.widget.RecyclerView
 
-abstract class RvAdapter<T, E : RvViewHolder<T>>(private var items: ArrayList<T>) :
+abstract class RvAdapter<T, E : RvViewHolder<T>>(
+    private var items: ArrayList<T>,
+    private val totalSize: Int
+) :
     RecyclerView.Adapter<E>() {
 
-    private val TYPE_Loading = 0
-    val TYPE_Item = 1
-
-    override fun getItemViewType(position: Int): Int {
-
-        if (position == items.size)
-            return TYPE_Loading
-
-        return TYPE_Item
-    }
+    private val tag = "RvAdapter"
 
     override fun getItemCount(): Int {
-        return items.size + 1
+        return items.size
     }
 
     override fun onBindViewHolder(holder: E, position: Int) {

@@ -7,12 +7,10 @@ import ir.jaShakouri.app.R
 import ir.jaShakouri.app.base.activity.ObserverActivity
 import ir.jaShakouri.app.databinding.ActivityMainBinding
 import ir.jaShakouri.app.view.vm.FindViewModel
-import javax.inject.Inject
 
 class MainActivity : ObserverActivity(), FindViewModel.EndList {
 
-    @Inject
-    lateinit var finderViewModel: FindViewModel
+    private val finderViewModel = FindViewModel()
 
     override fun attach() {
 

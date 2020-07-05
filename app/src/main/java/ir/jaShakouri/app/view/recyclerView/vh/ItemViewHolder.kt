@@ -1,4 +1,4 @@
-package ir.jaShakouri.app.view.vh
+package ir.jaShakouri.app.view.recyclerView.vh
 
 import ir.jaShakouri.app.base.recyclerView.RvViewHolder
 import ir.jaShakouri.app.databinding.ItemUserBinding

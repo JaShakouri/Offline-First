@@ -6,7 +6,7 @@
 
     <corners android:radius="@dimen/def_radius" />
 
-    <stroke1
+    <stroke
         android:width="0.5px"
         android:color="@color/_alpha" />
 

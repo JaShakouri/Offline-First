@@ -1,0 +1,63 @@
+{
+  "formatVersion": 1,
+  "database": {
+    "version": 1,
+    "identityHash": "92e1e2818980ee738f3cea50d5ff2339",
+    "entities": [
+      {
+        "tableName": "tbl_item",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`itemID` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `reasonName` TEXT, `referralID` TEXT, `summery` TEXT, `type` TEXT, `venue` TEXT)",
+        "fields": [
+          {
+            "fieldPath": "itemID",
+            "columnName": "itemID",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "reasonName",
+            "columnName": "reasonName",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "referralId",
+            "columnName": "referralID",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "summary",
+            "columnName": "summery",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "type",
+            "columnName": "type",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "venue",
+            "columnName": "venue",
+            "affinity": "TEXT",
+            "notNull": false
+          }
+        ],
+        "primaryKey": {
+          "columnNames": [
+            "itemID"
+          ],
+          "autoGenerate": true
+        },
+        "indices": [],
+        "foreignKeys": []
+      }
+    ],
+    "setupQueries": [
+      "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, \"92e1e2818980ee738f3cea50d5ff2339\")"
+    ]
+  }
+}

@@ -1,15 +1,10 @@
 package ir.jaShakouri.domain.model
 
-import androidx.room.Entity
-import androidx.room.PrimaryKey
 import com.google.gson.annotations.SerializedName
-import ir.jaShakouri.domain.AppKeys
+import java.io.Serializable
 
-@Entity(tableName = AppKeys.Item_TableName)
-class Item {
+class Item : Serializable {
 
-    @PrimaryKey(autoGenerate = true)
-    private var id: Int = 0
 
     @SerializedName("reasonName")
     var reasonName: String? = null

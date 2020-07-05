@@ -9,28 +9,32 @@ import androidx.databinding.BindingAdapter
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModel
 import androidx.recyclerview.widget.RecyclerView
 import com.facebook.drawee.view.SimpleDraweeView
 import io.reactivex.schedulers.Schedulers
 import ir.jaShakouri.app.BR
-import ir.jaShakouri.app.base.vm.BaseViewModel
 import ir.jaShakouri.app.utils.Utility
-import ir.jaShakouri.app.view.adapter.FindAdapter
+import ir.jaShakouri.app.view.recyclerView.adapter.FindAdapter
 import ir.jaShakouri.data.usecases.FinderRepository
 import ir.jaShakouri.domain.model.DataResponse
 import ir.jaShakouri.domain.model.Item
 import ir.jaShakouri.domain.model.Location
 import jp.wasabeef.recyclerview.adapters.ScaleInAnimationAdapter
-import javax.inject.Inject
 
-class FindViewModel @Inject constructor(private val findRepository: FinderRepository) : BaseObservable() {
+class FindViewModel : BaseObservable() {
 
     var liveDataListSuccessful = MutableLiveData<DataResponse>()
         @Bindable
         set(value) {
             field = value
             notifyPropertyChanged(BR.liveDataListSuccessful)
+        }
+
+    var liveDataListLoadMore = MutableLiveData<DataResponse>()
+        @Bindable
+        set(value) {
+            field = value
+            notifyPropertyChanged(BR.liveDataListLoadMore)
         }
 
     var liveDataListFailure = MutableLiveData<String>()
@@ -47,11 +51,19 @@ class FindViewModel @Inject constructor(private val findRepository: FinderReposi
             notifyPropertyChanged(BR.progress)
         }
 
+    var loadMoreProgress = MutableLiveData<Int>().default(View.GONE)
+        @Bindable
+        set(value) {
+            field = value
+            notifyPropertyChanged(BR.loadMoreProgress)
+        }
+
     companion object {
 
         private const val TAG = "MVVM_UserViewModel"
 
         var adapter: FindAdapter? = null
+        val findRepository = FinderRepository()
 
         var offset = 1
         var isLastPage = false
@@ -67,51 +79,57 @@ class FindViewModel @Inject constructor(private val findRepository: FinderReposi
         ) {
 
             listLiveData.observe((rv.context as LifecycleOwner), Observer {
+                adapter = FindAdapter(it.list as ArrayList<Item>, it.total)
+                rv.adapter = adapter
+                rv.addOnScrollListener(object : RecyclerView.OnScrollListener() {
 
-                if (adapter == null) {
+                    override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
 
-                    adapter = FindAdapter(it.list as ArrayList<Item>)
-                    rv.adapter =
-                        ScaleInAnimationAdapter(adapter)
+                        if (!rv.canScrollVertically(1)) {
 
-                    rv.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+                            isLastPage = adapter!!.itemCount >= it.total
 
-                        override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+                            if (!isLoading && !isLastPage) {
 
-                            if (!rv.canScrollVertically(1)) {
+                                Log.i(TAG, "onScrolled: Can Not Scroll")
 
-                                isLastPage = adapter!!.itemCount >= it.total
+                                if (endList != null)
+                                    endList!!.isEndList()
 
-                                if (!isLoading && !isLastPage) {
+                            } else {
+                                Log.i(
+                                    TAG,
+                                    "onScrolled: isLoading $isLoading isLastPage $isLastPage"
+                                )
 
-                                    Log.i(TAG, "onScrolled: Can Not Scroll")
-
-                                    if (endList != null)
-                                        endList!!.isEndList()
-
-                                } else {
-                                    Log.i(
-                                        TAG,
-                                        "onScrolled: isLoading $isLoading isLastPage $isLastPage"
+                                if (isLastPage)
+                                    adapter!!.notifyItemRemoved(
+                                        adapter!!.itemCount
                                     )
-
-                                    if (isLastPage)
-                                        adapter!!.notifyItemRemoved(
-                                            adapter!!.itemCount
-                                        )
-
-                                }
 
                             }
 
                         }
-                    })
 
-                } else {
-                    adapter!!.addView(it.list as ArrayList<Item>)
-                }
-
+                    }
+                })
             })
+
+        }
+
+        @JvmStatic
+        @BindingAdapter("bind:loadMore")
+        fun recyclerLoadMoreViewBinder(
+            rv: RecyclerView,
+            listLiveData: MutableLiveData<DataResponse>
+        ) {
+
+            listLiveData.observe((rv.context as LifecycleOwner),
+                Observer {
+                    if (adapter != null) {
+                        adapter!!.addView(it.list as ArrayList<Item>)
+                    }
+                })
 
         }
 
@@ -156,32 +174,20 @@ class FindViewModel @Inject constructor(private val findRepository: FinderReposi
         )
             .subscribeOn(Schedulers.io())
             .observeOn(Schedulers.io())
-            .subscribe()
+            .map {
+                progress.postValue(View.GONE)
+                liveDataListSuccessful.postValue(it)
 
-
-        /*
-    .enqueue(object : Callback<FindResponse> {
-
-        override fun onResponse(
-            call: Call<FindResponse>,
-            response: Response<FindResponse>
-        ) {
-            progress.postValue(View.GONE)
-            liveDataListSuccessful.postValue(response.body())
-        }
-
-        override fun onFailure(call: Call<FindResponse>, t: Throwable) {
-            liveDataListFailure.postValue(t.message)
-            progress.postValue(View.GONE)
-        }
-
-    })
-
-         */
+            }.onErrorReturn {
+                liveDataListFailure.postValue(it.message)
+                progress.postValue(View.GONE)
+            }.subscribe()
 
     }
 
     fun loadMore() {
+
+        loadMoreProgress.postValue(View.VISIBLE)
 
         isLoading = true
         offset++
@@ -190,30 +196,21 @@ class FindViewModel @Inject constructor(private val findRepository: FinderReposi
             "35.7523, 51.4449", "",
             offset
         )
-
-        /*
-        .enqueue(object : Callback<FindResponse> {
-
-            override fun onResponse(
-                call: Call<FindResponse>,
-                response: Response<FindResponse>
-            ) {
-                liveDataListSuccessful.postValue(response.body())
+            .subscribeOn(Schedulers.io())
+            .observeOn(Schedulers.io())
+            .map {
+                liveDataListLoadMore.postValue(it)
                 isLoading = false
-            }
+                loadMoreProgress.postValue(View.GONE)
 
-            override fun onFailure(call: Call<FindResponse>, t: Throwable) {
+            }.onErrorReturn {
 
                 isLoading = false
                 offset--
+                liveDataListFailure.postValue(it.message)
+                loadMoreProgress.postValue(View.GONE)
 
-                liveDataListFailure.postValue(t.message)
-
-            }
-
-        })
-
-         */
+            }.subscribe()
 
     }
 
@@ -224,5 +221,7 @@ class FindViewModel @Inject constructor(private val findRepository: FinderReposi
     interface EndList {
         fun isEndList()
     }
+
+    fun <T : Any?> MutableLiveData<T>.default(initialValue: T) = apply { setValue(initialValue) }
 
 }

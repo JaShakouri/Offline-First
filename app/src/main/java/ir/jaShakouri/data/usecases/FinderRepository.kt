@@ -1,46 +1,32 @@
 package ir.jaShakouri.data.usecases
 
-import android.annotation.SuppressLint
-import android.util.Log
 import io.reactivex.Observable
-import io.reactivex.schedulers.Schedulers
+import ir.jaShakouri.data.api.ApiContainer
 import ir.jaShakouri.data.api.ApiInterface
-import ir.jaShakouri.data.local.dataBase.dao.ItemDao
 import ir.jaShakouri.domain.AppKeys
 import ir.jaShakouri.domain.model.DataResponse
-import ir.jaShakouri.domain.model.Item
+import ir.jaShakouri.domain.model.FindResponse
 import java.text.SimpleDateFormat
 import java.util.*
-import javax.inject.Inject
 
-class FinderRepository @Inject constructor() {
+class FinderRepository {
 
-    @Inject
-    lateinit var apiInterface: ApiInterface
-
-    @Inject
-    lateinit var itemDao: ItemDao
+    var apiInterface: ApiInterface
 
     private val sdf: SimpleDateFormat = SimpleDateFormat("yyyyMMdd", Locale.getDefault())
     private var currentDate: String
 
     init {
         currentDate = sdf.format(Date())
+        apiInterface = ApiContainer.getInstance()
     }
 
     fun getItems(location: String, query: String, offset: Int): Observable<DataResponse> {
 
         return Observable.concatArray(
-            getItemsFromDb(),
             getItemsFromApi(location, query, offset)
         )
 
-    }
-
-    private fun getItemsFromDb(): Observable<DataResponse> {
-        return itemDao.getItems().map {
-            return@map DataResponse(it, itemDao.getCount())
-        }
     }
 
     private fun getItemsFromApi(
@@ -56,21 +42,7 @@ class FinderRepository @Inject constructor() {
                 it.response!!.groups!![0].items!!,
                 it.response!!.totalResults!!.toInt()
             )
-        }.doOnNext {
-            storeUsersInDb(it.list)
         }
-    }
-
-    @SuppressLint("CheckResult")
-    private fun storeUsersInDb(items: List<Item>) {
-
-        Observable.fromCallable { itemDao.insertAll(items) }
-            .subscribeOn(Schedulers.io())
-            .observeOn(Schedulers.io())
-            .subscribe {
-                Log.i(this.javaClass.simpleName, "Inserted ${items.size} users from API in DB...")
-            }
-
     }
 
 }

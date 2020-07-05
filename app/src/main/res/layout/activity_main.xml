@@ -9,7 +9,6 @@
 
     </data>
 
-
     <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
         xmlns:bind="http://schemas.android.com/tools"
@@ -20,9 +19,11 @@
             android:id="@+id/rv"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:layout_above="@+id/progress"
             android:orientation="vertical"
             android:overScrollMode="never"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+            bind:loadMore="@{viewModel.liveDataListLoadMore}"
             bind:recycler="@{viewModel.liveDataListSuccessful}" />
 
         <ProgressBar
@@ -30,6 +31,15 @@
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
             bind:visible="@{viewModel.progress}" />
+
+        <ProgressBar
+            android:id="@+id/progress"
+            style="?android:attr/progressBarStyleHorizontal"
+            android:layout_width="fill_parent"
+            android:layout_height="8dp"
+            android:layout_alignParentBottom="true"
+            android:indeterminate="true"
+            bind:visible="@{viewModel.loadMoreProgress}" />
 
     </RelativeLayout>
 
