@@ -33,9 +33,9 @@
                     android:layout_alignParentRight="true"
                     android:layout_centerVertical="true"
                     android:layout_margin="@dimen/def_margin"
-                    android:text="@{viewModel.liveDataListSize}"
                     android:textColor="@android:color/white"
-                    android:textSize="18sp" />
+                    android:textSize="18sp"
+                    bind:textListener="@{viewModel.liveDataListSize}" />
 
             </RelativeLayout>
 

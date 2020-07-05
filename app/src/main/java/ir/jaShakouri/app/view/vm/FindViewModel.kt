@@ -3,6 +3,8 @@ package ir.jaShakouri.app.view.vm
 import android.net.Uri
 import android.util.Log
 import android.view.View
+import android.view.animation.AlphaAnimation
+import android.view.animation.Animation
 import android.widget.TextView
 import androidx.databinding.BaseObservable
 import androidx.databinding.Bindable
@@ -20,6 +22,7 @@ import ir.jaShakouri.data.usecases.FinderRepository
 import ir.jaShakouri.domain.model.DataResponse
 import ir.jaShakouri.domain.model.Item
 import ir.jaShakouri.domain.model.Location
+
 
 class FindViewModel : BaseObservable() {
 
@@ -44,7 +47,7 @@ class FindViewModel : BaseObservable() {
             notifyPropertyChanged(BR.liveDataListFailure)
         }
 
-    var liveDataListSize = MutableLiveData<String>().default("0")
+    var liveDataListSize = MutableLiveData<String>()
         @Bindable
         set(value) {
             field = value
@@ -139,6 +142,24 @@ class FindViewModel : BaseObservable() {
         }
 
         @JvmStatic
+        @BindingAdapter("bind:textListener")
+        fun changeTextBinder(
+            view: TextView, progressLiveData: MutableLiveData<String>
+        ) {
+            progressLiveData.observe(view.context as LifecycleOwner, Observer {
+
+                val anim = AlphaAnimation(1.0f, 0.0f)
+                anim.duration = 200
+                anim.repeatCount = 1
+                anim.repeatMode = Animation.REVERSE
+
+                view.startAnimation(anim)
+
+                view.text = it
+            })
+        }
+
+        @JvmStatic
         @BindingAdapter("bind:imageLoader")
         fun imageLoaderBinder(
             imageView: SimpleDraweeView,
@@ -172,7 +193,7 @@ class FindViewModel : BaseObservable() {
             .map {
                 progress.postValue(View.GONE)
                 liveDataListSuccessful.postValue(it)
-                liveDataListSize.postValue(it.list.size.toString())
+                liveDataListSize.postValue(it.list.size.toString() + " / " + it.total)
             }.onErrorReturn {
                 Log.e(TAG, "getItems: $it")
                 liveDataListFailure.postValue(it.message)
@@ -195,11 +216,12 @@ class FindViewModel : BaseObservable() {
             .subscribeOn(Schedulers.io())
             .observeOn(Schedulers.io())
             .map {
+
+                liveDataListSize.postValue((adapter!!.itemCount + it.list.size).toString() + " / " + it.total)
+
                 liveDataListLoadMore.postValue(it)
                 isLoading = false
                 loadMoreProgress.postValue(View.GONE)
-                liveDataListSize.postValue(adapter!!.itemCount.toString())
-
             }.onErrorReturn {
 
                 isLoading = false
