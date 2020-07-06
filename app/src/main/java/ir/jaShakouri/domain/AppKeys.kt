@@ -16,9 +16,10 @@ class AppKeys {
 
         const val DataBaseName = "db_app"
         const val DataBaseVersion = 1
-
         const val PrefName: String = "pref_app"
 
+        var RetryCount = 3
+        var RetryDelay = 5000
     }
 
 }

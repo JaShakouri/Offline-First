@@ -6,6 +6,7 @@ import android.view.View
 import android.view.animation.AlphaAnimation
 import android.view.animation.Animation
 import android.widget.TextView
+import androidx.appcompat.widget.PopupMenu
 import androidx.databinding.BindingAdapter
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.MutableLiveData
@@ -13,6 +14,7 @@ import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.RecyclerView
 import com.facebook.drawee.view.SimpleDraweeView
 import io.reactivex.schedulers.Schedulers
+import ir.jaShakouri.app.R
 import ir.jaShakouri.app.base.vm.BaseViewModel
 import ir.jaShakouri.app.utils.Utility
 import ir.jaShakouri.app.view.recyclerView.adapter.FindAdapter
@@ -21,6 +23,7 @@ import ir.jaShakouri.domain.model.DataResponse
 import ir.jaShakouri.domain.model.Item
 import ir.jaShakouri.domain.model.Location
 import javax.inject.Inject
+import kotlin.system.exitProcess
 
 class FindViewModel @Inject constructor(private var findRepository: FinderRepository) :
     BaseViewModel() {
@@ -29,7 +32,7 @@ class FindViewModel @Inject constructor(private var findRepository: FinderReposi
 
     var liveDataListLoadMore = MutableLiveData<DataResponse>()
 
-    var liveDataListFailure = MutableLiveData<String>()
+    var liveDataListFailure = MutableLiveData<Throwable>()
 
     var liveDataListSize = MutableLiveData<String>()
 
@@ -158,7 +161,7 @@ class FindViewModel @Inject constructor(private var findRepository: FinderReposi
         findRepository.getItems(
             "35.7523, 51.4449", "",
             offset
-        )
+        )!!
             .subscribeOn(Schedulers.io())
             .observeOn(Schedulers.io())
             .map {
@@ -168,7 +171,7 @@ class FindViewModel @Inject constructor(private var findRepository: FinderReposi
                 liveDataState.postValue(if (it.isOnline) "online" else "offline")
             }.onErrorReturn {
                 Log.e(TAG, "getItems: $it")
-                liveDataListFailure.postValue(it.message)
+                liveDataListFailure.postValue(it)
                 progress.postValue(View.GONE)
             }.subscribe()
 
@@ -181,7 +184,7 @@ class FindViewModel @Inject constructor(private var findRepository: FinderReposi
         isLoading = true
         offset++
 
-        findRepository.getMoreItems(offset)
+        findRepository.getLoadMore(offset)!!
             .subscribeOn(Schedulers.io())
             .observeOn(Schedulers.io())
             .map {
@@ -196,7 +199,7 @@ class FindViewModel @Inject constructor(private var findRepository: FinderReposi
 
                 isLoading = false
                 offset--
-                liveDataListFailure.postValue(it.message)
+                liveDataListFailure.postValue(it)
                 loadMoreProgress.postValue(View.GONE)
                 Log.e(TAG, "loadMore: $it")
 
@@ -212,6 +215,32 @@ class FindViewModel @Inject constructor(private var findRepository: FinderReposi
         fun isEndList()
     }
 
-    fun <T : Any?> MutableLiveData<T>.default(initialValue: T) = apply { setValue(initialValue) }
+    private fun <T : Any?> MutableLiveData<T>.default(initialValue: T) =
+        apply { setValue(initialValue) }
+
+    fun menuClickBinder(view: View) {
+
+        val popupMenu = PopupMenu(view.context, view)
+        popupMenu.menuInflater.inflate(R.menu.menu, popupMenu.menu)
+        popupMenu.setOnMenuItemClickListener {
+
+            when (it.itemId) {
+
+                R.id.clear -> {
+                    findRepository.clearCache()
+                    return@setOnMenuItemClickListener true
+                }
+
+                R.id.exit -> {
+                    exitProcess(0)
+                }
+            }
+
+            return@setOnMenuItemClickListener false
+
+        }
+        popupMenu.show()
+
+    }
 
 }

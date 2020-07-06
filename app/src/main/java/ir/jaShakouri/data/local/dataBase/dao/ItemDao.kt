@@ -4,7 +4,6 @@ import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
-import io.reactivex.Observable
 import io.reactivex.Single
 import ir.jaShakouri.domain.AppKeys
 import ir.jaShakouri.domain.model.Item
@@ -23,5 +22,8 @@ interface ItemDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insertAll(items: List<Item>)
+
+    @Query("DELETE FROM ${AppKeys.Item_TableName}")
+    fun deleteAll()
 
 }

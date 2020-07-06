@@ -4,44 +4,56 @@ import android.util.Log
 import io.reactivex.Observable
 import io.reactivex.schedulers.Schedulers
 import ir.jaShakouri.data.api.ApiInterface
+import ir.jaShakouri.data.api.config.RetryWithDelay
 import ir.jaShakouri.data.local.dataBase.dao.ItemDao
 import ir.jaShakouri.domain.AppKeys
+import ir.jaShakouri.domain.dataSource.find.FindDataSource
 import ir.jaShakouri.domain.model.DataResponse
 import ir.jaShakouri.domain.model.Item
 import java.text.SimpleDateFormat
 import java.util.*
 import javax.inject.Inject
 
-class FinderRepository @Inject constructor(var apiInterface: ApiInterface, var itemDao: ItemDao) {
+class FinderRepository @Inject constructor(
+    private var apiInterface: ApiInterface, private var itemDao: ItemDao
+) : FindDataSource {
 
     private val tag = "FinderRepository"
 
     private val sdf: SimpleDateFormat = SimpleDateFormat("yyyyMMdd", Locale.getDefault())
     private var currentDate: String
 
-    var location = ""
-    var query = ""
-    var pageOffset = 1
+    private var location = ""
+    private var query = ""
+    private var pageOffset = 1
 
     init {
         currentDate = sdf.format(Date())
     }
 
-    fun getItems(location: String, query: String, offset: Int): Observable<DataResponse> {
+    override fun getItems(
+        mLocation: String,
+        mQuery: String?,
+        mOffset: Int
+    ): Observable<DataResponse>? {
 
-        this.location = location
-        this.query = query
-        this.pageOffset = offset
+        this.location = mLocation
+        this.query = mQuery!!
+        this.pageOffset = mOffset
 
         return Observable.concatArray(
             getItemFromDB(), getItemsFromApi()
         )
-
     }
 
-    fun getMoreItems(offset: Int): Observable<DataResponse> {
-        this.pageOffset = offset
+    override fun getLoadMore(mOffset: Int): Observable<DataResponse>? {
+        this.pageOffset = mOffset
         return getItemsFromApi()
+    }
+
+    override fun clearCache() {
+        itemDao.deleteAll()
+        getItemsFromApi()
     }
 
     private fun getItemFromDB(): Observable<DataResponse> {
@@ -64,7 +76,7 @@ class FinderRepository @Inject constructor(var apiInterface: ApiInterface, var i
             )
         }.doOnNext {
             storeListItem(it.list)
-        }
+        }.retryWhen(RetryWithDelay(3, 3000))
     }
 
     private fun storeListItem(list: List<Item>) {

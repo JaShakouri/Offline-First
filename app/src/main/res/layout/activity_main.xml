@@ -34,7 +34,7 @@
                     textListener="@{viewModel.liveDataState}"
                     android:layout_weight="50"
                     android:gravity="start"
-                    android:padding="@dimen/min_padding"
+                    android:padding="@dimen/def_padding"
                     android:textColor="@android:color/white"
                     android:textSize="18sp" />
 
@@ -53,6 +53,7 @@
                     android:layout_height="match_parent"
                     android:background="?attr/selectableItemBackgroundBorderless"
                     android:contentDescription="@null"
+                    android:onClick="@{viewModel.menuClickBinder}"
                     android:src="@drawable/ic_more" />
 
             </LinearLayout>
