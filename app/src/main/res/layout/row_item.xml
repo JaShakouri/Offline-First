@@ -64,6 +64,7 @@
 
             <com.facebook.drawee.view.SimpleDraweeView
                 android:id="@+id/imgView"
+                imageLoader="@{item.venue.location}"
                 android:layout_width="@dimen/min_width"
                 android:layout_height="@dimen/min_height"
                 android:layout_alignParentEnd="true"
@@ -76,8 +77,7 @@
                 app:roundBottomRight="true"
                 app:roundTopLeft="true"
                 app:roundTopRight="true"
-                app:roundedCornerRadius="@dimen/min_radius"
-                bind:imageLoader="@{item.venue.location}" />
+                app:roundedCornerRadius="@dimen/min_radius" />
 
         </RelativeLayout>
 

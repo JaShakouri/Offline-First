@@ -10,7 +10,6 @@
     </data>
 
     <RelativeLayout xmlns:app="http://schemas.android.com/apk/res-auto"
-        xmlns:bind="http://schemas.android.com/tools"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
@@ -22,51 +21,70 @@
             app:contentInsetEnd="0dp"
             app:contentInsetStart="0dp">
 
-            <RelativeLayout
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:animateLayoutChanges="true">
+                android:animateLayoutChanges="true"
+                android:gravity="center"
+                android:weightSum="100">
 
                 <TextView
                     style="@style/style_def_textView"
-                    android:layout_alignParentEnd="true"
-                    android:layout_alignParentRight="true"
-                    android:layout_centerVertical="true"
-                    android:layout_margin="@dimen/def_margin"
+                    animation="@{false}"
+                    textListener="@{viewModel.liveDataState}"
+                    android:layout_weight="50"
+                    android:gravity="start"
+                    android:padding="@dimen/min_padding"
                     android:textColor="@android:color/white"
-                    android:textSize="18sp"
-                    bind:textListener="@{viewModel.liveDataListSize}" />
+                    android:textSize="18sp" />
 
-            </RelativeLayout>
+                <TextView
+                    style="@style/style_def_textView"
+                    animation="@{true}"
+                    textListener="@{viewModel.liveDataListSize}"
+                    android:layout_weight="50"
+                    android:gravity="end"
+                    android:padding="@dimen/min_padding"
+                    android:textColor="@android:color/white"
+                    android:textSize="18sp" />
+
+                <androidx.appcompat.widget.AppCompatImageButton
+                    android:layout_width="?attr/actionBarSize"
+                    android:layout_height="match_parent"
+                    android:background="?attr/selectableItemBackgroundBorderless"
+                    android:contentDescription="@null"
+                    android:src="@drawable/ic_more" />
+
+            </LinearLayout>
 
         </androidx.appcompat.widget.Toolbar>
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rv"
+            loadMore="@{viewModel.liveDataListLoadMore}"
+            recycler="@{viewModel.liveDataListSuccessful}"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_above="@+id/progress"
             android:layout_below="@+id/toolbar"
             android:orientation="vertical"
             android:overScrollMode="never"
-            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-            bind:loadMore="@{viewModel.liveDataListLoadMore}"
-            bind:recycler="@{viewModel.liveDataListSuccessful}" />
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
 
         <ProgressBar
+            visible="@{viewModel.progress}"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_centerInParent="true"
-            bind:visible="@{viewModel.progress}" />
+            android:layout_centerInParent="true" />
 
         <ProgressBar
             android:id="@+id/progress"
             style="?android:attr/progressBarStyleHorizontal"
+            visible="@{viewModel.loadMoreProgress}"
             android:layout_width="fill_parent"
             android:layout_height="8dp"
             android:layout_alignParentBottom="true"
-            android:indeterminate="true"
-            bind:visible="@{viewModel.loadMoreProgress}" />
+            android:indeterminate="true" />
 
     </RelativeLayout>
 

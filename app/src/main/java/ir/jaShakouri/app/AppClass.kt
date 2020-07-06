@@ -2,8 +2,16 @@ package ir.jaShakouri.app
 
 import androidx.multidex.MultiDexApplication
 import com.facebook.drawee.backends.pipeline.Fresco
+import dagger.android.AndroidInjector
+import dagger.android.DispatchingAndroidInjector
+import dagger.android.HasAndroidInjector
+import ir.jaShakouri.app.di.component.DaggerAppComponent
+import javax.inject.Inject
 
-class AppClass : MultiDexApplication() {
+class AppClass : MultiDexApplication(), HasAndroidInjector {
+
+    @Inject
+    lateinit var activityDispatchingAndroidInjector: DispatchingAndroidInjector<Any>
 
     companion object {
         lateinit var Instance: AppClass
@@ -15,6 +23,12 @@ class AppClass : MultiDexApplication() {
 
         Fresco.initialize(this)
 
+        DaggerAppComponent.builder().app(this).build().inject(this)
+
+    }
+
+    override fun androidInjector(): AndroidInjector<Any> {
+        return activityDispatchingAndroidInjector
     }
 
 }

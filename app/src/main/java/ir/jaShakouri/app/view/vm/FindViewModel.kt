@@ -6,8 +6,6 @@ import android.view.View
 import android.view.animation.AlphaAnimation
 import android.view.animation.Animation
 import android.widget.TextView
-import androidx.databinding.BaseObservable
-import androidx.databinding.Bindable
 import androidx.databinding.BindingAdapter
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.MutableLiveData
@@ -15,65 +13,37 @@ import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.RecyclerView
 import com.facebook.drawee.view.SimpleDraweeView
 import io.reactivex.schedulers.Schedulers
-import ir.jaShakouri.app.BR
+import ir.jaShakouri.app.base.vm.BaseViewModel
 import ir.jaShakouri.app.utils.Utility
 import ir.jaShakouri.app.view.recyclerView.adapter.FindAdapter
 import ir.jaShakouri.data.usecases.FinderRepository
 import ir.jaShakouri.domain.model.DataResponse
 import ir.jaShakouri.domain.model.Item
 import ir.jaShakouri.domain.model.Location
+import javax.inject.Inject
 
-
-class FindViewModel : BaseObservable() {
+class FindViewModel @Inject constructor(private var findRepository: FinderRepository) :
+    BaseViewModel() {
 
     var liveDataListSuccessful = MutableLiveData<DataResponse>()
-        @Bindable
-        set(value) {
-            field = value
-            notifyPropertyChanged(BR.liveDataListSuccessful)
-        }
 
     var liveDataListLoadMore = MutableLiveData<DataResponse>()
-        @Bindable
-        set(value) {
-            field = value
-            notifyPropertyChanged(BR.liveDataListLoadMore)
-        }
 
     var liveDataListFailure = MutableLiveData<String>()
-        @Bindable
-        set(value) {
-            field = value
-            notifyPropertyChanged(BR.liveDataListFailure)
-        }
 
     var liveDataListSize = MutableLiveData<String>()
-        @Bindable
-        set(value) {
-            field = value
-            notifyPropertyChanged(BR.liveDataListSize)
-        }
+
+    var liveDataState = MutableLiveData<String>()
 
     var progress = MutableLiveData<Int>()
-        @Bindable
-        set(value) {
-            field = value
-            notifyPropertyChanged(BR.progress)
-        }
 
     var loadMoreProgress = MutableLiveData<Int>().default(View.GONE)
-        @Bindable
-        set(value) {
-            field = value
-            notifyPropertyChanged(BR.loadMoreProgress)
-        }
 
     companion object {
 
         private const val TAG = "MVVM_FindViewModel"
 
         var adapter: FindAdapter? = null
-        val findRepository = FinderRepository()
 
         var offset = 1
         var isLastPage = false
@@ -82,7 +52,7 @@ class FindViewModel : BaseObservable() {
         var endList: EndList? = null
 
         @JvmStatic
-        @BindingAdapter("bind:recycler")
+        @BindingAdapter("recycler")
         fun recyclerViewBinder(
             rv: RecyclerView,
             listLiveData: MutableLiveData<DataResponse>
@@ -116,7 +86,7 @@ class FindViewModel : BaseObservable() {
         }
 
         @JvmStatic
-        @BindingAdapter("bind:loadMore")
+        @BindingAdapter("loadMore")
         fun recyclerLoadMoreViewBinder(
             rv: RecyclerView,
             listLiveData: MutableLiveData<DataResponse>
@@ -132,7 +102,7 @@ class FindViewModel : BaseObservable() {
         }
 
         @JvmStatic
-        @BindingAdapter("bind:visible")
+        @BindingAdapter("visible")
         fun visibilityBinder(
             view: View, progressLiveData: MutableLiveData<Int>
         ) {
@@ -142,25 +112,26 @@ class FindViewModel : BaseObservable() {
         }
 
         @JvmStatic
-        @BindingAdapter("bind:textListener")
+        @BindingAdapter(value = ["textListener", "animation"], requireAll = true)
         fun changeTextBinder(
-            view: TextView, progressLiveData: MutableLiveData<String>
+            view: TextView, liveData: MutableLiveData<String>, animation: Boolean
         ) {
-            progressLiveData.observe(view.context as LifecycleOwner, Observer {
+            liveData.observe(view.context as LifecycleOwner, Observer {
 
-                val anim = AlphaAnimation(1.0f, 0.0f)
-                anim.duration = 200
-                anim.repeatCount = 1
-                anim.repeatMode = Animation.REVERSE
-
-                view.startAnimation(anim)
+                if (animation) {
+                    val anim = AlphaAnimation(1.0f, 0.0f)
+                    anim.duration = 200
+                    anim.repeatCount = 1
+                    anim.repeatMode = Animation.REVERSE
+                    view.startAnimation(anim)
+                }
 
                 view.text = it
             })
         }
 
         @JvmStatic
-        @BindingAdapter("bind:imageLoader")
+        @BindingAdapter("imageLoader")
         fun imageLoaderBinder(
             imageView: SimpleDraweeView,
             location: Location
@@ -194,6 +165,7 @@ class FindViewModel : BaseObservable() {
                 progress.postValue(View.GONE)
                 liveDataListSuccessful.postValue(it)
                 liveDataListSize.postValue(it.list.size.toString() + " / " + it.total)
+                liveDataState.postValue(if (it.isOnline) "online" else "offline")
             }.onErrorReturn {
                 Log.e(TAG, "getItems: $it")
                 liveDataListFailure.postValue(it.message)
@@ -209,14 +181,12 @@ class FindViewModel : BaseObservable() {
         isLoading = true
         offset++
 
-        findRepository.getItems(
-            "35.7523, 51.4449", "",
-            offset
-        )
+        findRepository.getMoreItems(offset)
             .subscribeOn(Schedulers.io())
             .observeOn(Schedulers.io())
             .map {
 
+                liveDataState.postValue(if (it.isOnline) "online" else "offline")
                 liveDataListSize.postValue((adapter!!.itemCount + it.list.size).toString() + " / " + it.total)
 
                 liveDataListLoadMore.postValue(it)
