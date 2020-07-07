@@ -10,8 +10,8 @@ abstract class BaseActivity : DaggerAppCompatActivity() {
     abstract fun init()
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        viewModel()
         super.onCreate(savedInstanceState)
+        viewModel()
         init()
         attach()
     }

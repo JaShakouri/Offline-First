@@ -23,7 +23,7 @@ class AppClass : MultiDexApplication(), HasAndroidInjector {
 
         Fresco.initialize(this)
 
-        DaggerAppComponent.builder().app(this).build().inject(this)
+        DaggerAppComponent.factory().create(this).inject(this)
 
     }
 

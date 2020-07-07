@@ -33,7 +33,7 @@ buildscript {
         room_compiler = "1.1.1"
         moshi = "1.9.3"
 
-        dagger2_version = "2.27"
+        dagger2_version = "2.22"
         dagger2_support_version = "2.25.3"
 
     }

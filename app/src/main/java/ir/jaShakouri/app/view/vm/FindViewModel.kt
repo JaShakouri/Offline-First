@@ -11,11 +11,11 @@ import androidx.databinding.BindingAdapter
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModel
 import androidx.recyclerview.widget.RecyclerView
 import com.facebook.drawee.view.SimpleDraweeView
 import io.reactivex.schedulers.Schedulers
 import ir.jaShakouri.app.R
-import ir.jaShakouri.app.base.vm.BaseViewModel
 import ir.jaShakouri.app.utils.Utility
 import ir.jaShakouri.app.view.recyclerView.adapter.FindAdapter
 import ir.jaShakouri.data.usecases.FinderRepository
@@ -26,7 +26,7 @@ import javax.inject.Inject
 import kotlin.system.exitProcess
 
 class FindViewModel @Inject constructor(private var findRepository: FinderRepository) :
-    BaseViewModel() {
+    ViewModel() {
 
     var liveDataListSuccessful = MutableLiveData<DataResponse>()
 

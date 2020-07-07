@@ -1,19 +1,23 @@
 package ir.jaShakouri.app.di.module
 
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
+import dagger.Binds
 import dagger.Module
-import dagger.Provides
-import ir.jaShakouri.app.base.vm.BaseViewModel
+import dagger.multibindings.IntoMap
+import ir.jaShakouri.app.di.viewModel.ViewModelInjector
+import ir.jaShakouri.app.di.viewModel.ViewModelKey
 import ir.jaShakouri.app.view.vm.FindViewModel
-import ir.jaShakouri.data.usecases.FinderRepository
-import javax.inject.Singleton
 
 @Module
-class ViewModelModule {
+abstract class ViewModelModule {
 
-    @Singleton
-    @Provides
-    fun bindFindViewModel(repo: FinderRepository): BaseViewModel {
-        return FindViewModel(repo)
-    }
+    @Binds
+    @IntoMap
+    @ViewModelKey(FindViewModel::class)
+    internal abstract fun bindFindViewModel(findViewModel: FindViewModel): ViewModel
+
+    @Binds
+    internal abstract fun provideViewModelInjector(injector: ViewModelInjector): ViewModelProvider.Factory
 
 }
