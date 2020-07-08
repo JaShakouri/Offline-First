@@ -3,8 +3,9 @@ package ir.jaShakouri.data.local.sharedPref
 import android.content.Context
 import ir.jaShakouri.app.AppClass
 import ir.jaShakouri.domain.AppKeys
+import javax.inject.Inject
 
-class Pref constructor(appClass: AppClass) {
+class Pref @Inject constructor(appClass: AppClass) {
 
     private val pref =
         appClass.baseContext.getSharedPreferences(AppKeys.PrefName, Context.MODE_PRIVATE)
