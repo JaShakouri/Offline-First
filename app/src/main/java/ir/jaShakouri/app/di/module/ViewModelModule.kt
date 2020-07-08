@@ -5,7 +5,7 @@ import androidx.lifecycle.ViewModelProvider
 import dagger.Binds
 import dagger.Module
 import dagger.multibindings.IntoMap
-import ir.jaShakouri.app.di.viewModel.ViewModelInjector
+import ir.jaShakouri.app.di.viewModel.ViewModelFactory
 import ir.jaShakouri.app.di.viewModel.ViewModelKey
 import ir.jaShakouri.app.view.vm.FindViewModel
 
@@ -18,6 +18,6 @@ abstract class ViewModelModule {
     internal abstract fun bindFindViewModel(findViewModel: FindViewModel): ViewModel
 
     @Binds
-    internal abstract fun provideViewModelInjector(injector: ViewModelInjector): ViewModelProvider.Factory
+    internal abstract fun provideViewModelInjector(injector: ViewModelFactory): ViewModelProvider.Factory
 
 }
