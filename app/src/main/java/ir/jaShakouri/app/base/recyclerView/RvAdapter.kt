@@ -15,8 +15,7 @@ abstract class RvAdapter<T, E : RvViewHolder<T>>(
     }
 
     override fun onBindViewHolder(holder: E, position: Int) {
-        if (position < items.size)
-            holder.setViewModel(items[position])
+        holder.setViewModel(items[position])
     }
 
     override fun onViewAttachedToWindow(holder: E) {

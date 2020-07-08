@@ -14,6 +14,7 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModel
 import androidx.recyclerview.widget.RecyclerView
 import com.facebook.drawee.view.SimpleDraweeView
+import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
 import ir.jaShakouri.app.R
 import ir.jaShakouri.app.utils.Utility
@@ -27,6 +28,8 @@ import kotlin.system.exitProcess
 
 class FindViewModel @Inject constructor(private var findRepository: FinderRepository) :
     ViewModel() {
+
+    var disposable = CompositeDisposable()
 
     var liveDataListSuccessful = MutableLiveData<DataResponse>()
 
@@ -154,11 +157,16 @@ class FindViewModel @Inject constructor(private var findRepository: FinderReposi
 
     }
 
+    override fun onCleared() {
+        super.onCleared()
+        disposable.dispose()
+    }
+
     fun getItems() {
 
         progress.postValue(View.VISIBLE)
 
-        findRepository.getItems(
+        disposable.add(findRepository.getItems(
             "35.7523, 51.4449", "",
             offset
         )!!
@@ -174,6 +182,7 @@ class FindViewModel @Inject constructor(private var findRepository: FinderReposi
                 liveDataListFailure.postValue(it)
                 progress.postValue(View.GONE)
             }.subscribe()
+        )
 
     }
 
@@ -184,7 +193,7 @@ class FindViewModel @Inject constructor(private var findRepository: FinderReposi
         isLoading = true
         offset++
 
-        findRepository.getLoadMore(offset)!!
+        disposable.add(findRepository.getLoadMore(offset)!!
             .subscribeOn(Schedulers.io())
             .observeOn(Schedulers.io())
             .map {
@@ -204,6 +213,7 @@ class FindViewModel @Inject constructor(private var findRepository: FinderReposi
                 Log.e(TAG, "loadMore: $it")
 
             }.subscribe()
+        )
 
     }
 
