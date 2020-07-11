@@ -4,7 +4,6 @@ import android.widget.Toast
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.ViewModelProviders
 import ir.jaShakouri.app.R
 import ir.jaShakouri.app.base.activity.ObserverActivity
 import ir.jaShakouri.app.databinding.ActivityMainBinding
@@ -13,13 +12,13 @@ import javax.inject.Inject
 
 class MainActivity : ObserverActivity(), FindViewModel.EndList {
 
-    lateinit var finderViewModel: FindViewModel
+    private lateinit var finderViewModel: FindViewModel
 
     @Inject
     lateinit var factory: ViewModelProvider.Factory
 
     override fun viewModel() {
-        finderViewModel = ViewModelProviders.of(this, factory)[FindViewModel::class.java]
+        finderViewModel = factory.create(FindViewModel::class.java)
     }
 
     override fun init() {

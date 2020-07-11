@@ -2,4 +2,6 @@
     <string name="app_name">Offline First</string>
     <string name="enter_your_name">Enter Your Name</string>
     <string name="enter_your_phone">Enter Your Phone</string>
+    <string name="clear">Clear</string>
+    <string name="exit">Exit</string>
 </resources>

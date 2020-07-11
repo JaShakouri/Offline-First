@@ -13,15 +13,15 @@ import ir.jaShakouri.domain.model.Item
 class FindAdapter(items: ArrayList<Item>, totalSize: Int) :
     RvAdapter<Item, RvViewHolder<Item>>(items, totalSize) {
 
-    private var inflator: LayoutInflater? = null
+    private var infLater: LayoutInflater? = null
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RvViewHolder<Item> {
 
-        if (inflator == null)
-            inflator = LayoutInflater.from(parent.context)
+        if (infLater == null)
+            infLater = LayoutInflater.from(parent.context)
 
         val itemBinding: ItemUserBinding = DataBindingUtil
-            .inflate(inflator!!, R.layout.row_item, parent, false)
+            .inflate(infLater!!, R.layout.row_item, parent, false)
 
         return ItemViewHolder(itemBinding)
 
