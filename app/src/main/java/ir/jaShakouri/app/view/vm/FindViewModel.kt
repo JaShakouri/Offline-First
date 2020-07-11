@@ -29,7 +29,7 @@ import kotlin.system.exitProcess
 class FindViewModel @Inject constructor(private var findRepository: FinderRepository) :
     ViewModel() {
 
-    var disposable = CompositeDisposable()
+    private var disposable = CompositeDisposable()
 
     var liveDataListSuccessful = MutableLiveData<DataResponse>()
 
@@ -151,7 +151,7 @@ class FindViewModel @Inject constructor(private var findRepository: FinderReposi
                 18
             )
 
-            imageView.setImageURI(Uri.parse(image))
+            imageView.setImageURI(Uri.parse(image), imageView.context)
 
         }
 
