@@ -6,13 +6,13 @@ import ir.jaShakouri.domain.model.DataResponse
 
 interface FindDataSource : BaseDataSource {
 
-    fun getItems(
+    fun items(
         mLocation: String,
         mQuery: String?,
         mOffset: Int
     ): Observable<DataResponse>?
 
-    fun getLoadMore(mOffset: Int): Observable<DataResponse>?
+    fun loadMore(mOffset: Int): Observable<DataResponse>?
     fun clearCache()
 
 }

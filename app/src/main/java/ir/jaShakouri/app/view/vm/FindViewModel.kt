@@ -166,7 +166,7 @@ class FindViewModel @Inject constructor(private var findRepository: FinderReposi
 
         progress.postValue(View.VISIBLE)
 
-        disposable.add(findRepository.getItems(
+        disposable.add(findRepository.items(
             "35.7523, 51.4449", "",
             offset
         )!!
@@ -193,7 +193,7 @@ class FindViewModel @Inject constructor(private var findRepository: FinderReposi
         isLoading = true
         offset++
 
-        disposable.add(findRepository.getLoadMore(offset)!!
+        disposable.add(findRepository.loadMore(offset)!!
             .subscribeOn(Schedulers.io())
             .observeOn(Schedulers.io())
             .map {

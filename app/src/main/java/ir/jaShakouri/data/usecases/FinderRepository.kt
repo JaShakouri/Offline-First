@@ -31,7 +31,7 @@ class FinderRepository @Inject constructor(
         currentDate = sdf.format(Date())
     }
 
-    override fun getItems(
+    override fun items(
         mLocation: String,
         mQuery: String?,
         mOffset: Int
@@ -46,7 +46,7 @@ class FinderRepository @Inject constructor(
         )
     }
 
-    override fun getLoadMore(mOffset: Int): Observable<DataResponse>? {
+    override fun loadMore(mOffset: Int): Observable<DataResponse>? {
         this.pageOffset = mOffset
         return getItemsFromApi()
     }
