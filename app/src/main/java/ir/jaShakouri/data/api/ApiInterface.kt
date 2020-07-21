@@ -1,6 +1,6 @@
 package ir.jaShakouri.data.api
 
-import io.reactivex.Observable
+import io.reactivex.Single
 import ir.jaShakouri.domain.model.FindResponse
 import retrofit2.http.GET
 import retrofit2.http.Query
@@ -17,6 +17,6 @@ interface ApiInterface {
         @Query("limit") mLimit: Int,
         @Query("offset") mOffset: Int,
         @Query("radius") mMeter: Int
-    ): Observable<FindResponse>
+    ): Single<FindResponse>
 
 }

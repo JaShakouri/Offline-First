@@ -1,4 +1,4 @@
-package ir.jaShakouri.data.usecases
+package ir.jaShakouri.data.repository.finder
 
 import android.util.Log
 import io.reactivex.Observable
@@ -7,7 +7,6 @@ import ir.jaShakouri.data.api.ApiInterface
 import ir.jaShakouri.data.api.config.RetryWithDelay
 import ir.jaShakouri.data.local.dataBase.dao.ItemDao
 import ir.jaShakouri.domain.AppKeys
-import ir.jaShakouri.domain.dataSource.find.FindDataSource
 import ir.jaShakouri.domain.model.DataResponse
 import ir.jaShakouri.domain.model.Item
 import java.text.SimpleDateFormat
@@ -16,7 +15,7 @@ import javax.inject.Inject
 
 class FinderRepository @Inject constructor(
     private var apiInterface: ApiInterface, private var itemDao: ItemDao
-) : FindDataSource {
+) : FindRepo<DataResponse> {
 
     private val tag = "FinderRepository"
 
@@ -31,7 +30,7 @@ class FinderRepository @Inject constructor(
         currentDate = sdf.format(Date())
     }
 
-    override fun items(
+    override fun getData(
         mLocation: String,
         mQuery: String?,
         mOffset: Int
@@ -74,7 +73,7 @@ class FinderRepository @Inject constructor(
                 it.response!!.groups!![0].items!!,
                 it.response!!.totalResults!!.toInt(), true
             )
-        }.doOnNext {
+        }.toObservable().doOnNext {
             storeListItem(it.list)
         }.retryWhen(RetryWithDelay(3, 3000))
     }

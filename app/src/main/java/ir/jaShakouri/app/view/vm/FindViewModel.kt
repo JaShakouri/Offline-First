@@ -19,7 +19,7 @@ import io.reactivex.schedulers.Schedulers
 import ir.jaShakouri.app.R
 import ir.jaShakouri.app.utils.Utility
 import ir.jaShakouri.app.view.recyclerView.adapter.FindAdapter
-import ir.jaShakouri.data.usecases.FinderRepository
+import ir.jaShakouri.data.repository.finder.FinderRepository
 import ir.jaShakouri.domain.model.DataResponse
 import ir.jaShakouri.domain.model.Item
 import ir.jaShakouri.domain.model.Location
@@ -166,7 +166,7 @@ class FindViewModel @Inject constructor(private var findRepository: FinderReposi
 
         progress.postValue(View.VISIBLE)
 
-        disposable.add(findRepository.items(
+        disposable.add(findRepository.getData(
             "35.7523, 51.4449", "",
             offset
         )!!

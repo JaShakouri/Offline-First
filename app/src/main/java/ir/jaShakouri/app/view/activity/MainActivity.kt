@@ -31,11 +31,9 @@ class MainActivity : ObserverActivity(), FindViewModel.EndList {
     }
 
     override fun attach() {
-
         finderViewModel.liveDataListFailure.observe(this, Observer {
             Toast.makeText(this, it.message, Toast.LENGTH_SHORT).show()
         })
-
     }
 
     override fun subscribe() {
