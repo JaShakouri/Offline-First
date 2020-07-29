@@ -1,6 +1,6 @@
-package ir.jaShakouri.app.base.activity
+package ir.jaShakouri.app.base.fragment
 
-abstract class ObserverActivity : BaseActivity() {
+abstract class ObserverFragment : BaseFragment() {
 
     private var loaded = false
 

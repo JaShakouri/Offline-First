@@ -1,19 +1,14 @@
 package ir.jaShakouri.app.base.activity
 
 import android.os.Bundle
-import dagger.android.support.DaggerAppCompatActivity
+import androidx.appcompat.app.AppCompatActivity
+abstract class BaseActivity : AppCompatActivity() {
 
-abstract class BaseActivity : DaggerAppCompatActivity() {
-
-    abstract fun viewModel()
-    abstract fun attach()
     abstract fun init()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        viewModel()
         init()
-        attach()
     }
 
 }

@@ -15,6 +15,7 @@ import javax.inject.Singleton
         AppModule::class,
         NetModule::class,
         ActivityModule::class,
+        FragmentModule::class,
         RepositoryModule::class,
         ViewModelModule::class,
         DBModule::class
