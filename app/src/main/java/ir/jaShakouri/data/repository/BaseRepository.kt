@@ -1,3 +1,3 @@
 package ir.jaShakouri.data.repository
 
-interface BaseDataRepository<T>
+interface BaseRepository<T>

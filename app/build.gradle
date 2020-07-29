@@ -92,4 +92,8 @@ dependencies {
     implementation "androidx.room:room-guava:$room"
     kapt "android.arch.persistence.room:compiler:$room_compiler"
 
+    implementation "androidx.navigation:navigation-fragment-ktx:$nav_version"
+    implementation "androidx.navigation:navigation-ui-ktx:$nav_version"
+    implementation "androidx.navigation:navigation-dynamic-features-fragment:$nav_version"
+
 }

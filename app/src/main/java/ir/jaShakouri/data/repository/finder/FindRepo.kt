@@ -1,9 +1,9 @@
 package ir.jaShakouri.data.repository.finder
 
 import io.reactivex.Observable
-import ir.jaShakouri.data.repository.BaseDataRepository
+import ir.jaShakouri.data.repository.BaseRepository
 
-interface FindRepo<T> : BaseDataRepository<T> {
+interface FindRepo<T> : BaseRepository<T> {
 
     fun getData(
         mLocation: String,
