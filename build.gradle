@@ -3,7 +3,12 @@ buildscript {
 
     ext {
 
-        kotlin_v = "1.3.0"
+        DefType = "String"
+
+        API_BASE_URL = "API_BASE_URL"
+        SOCKET_BASE_URL = "SOCKET_BASE_URL"
+
+        kotlin_v = "1.3.1"
         kotlin_version = "1.3.72"
 
         applicationId = "ir.jaShakouri.tuturial"
