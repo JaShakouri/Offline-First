@@ -75,8 +75,8 @@ android {
 
         stage {
 
-            buildConfigField(DefType, API_BASE_URL, '\"http://base_url.com\"')
-            buildConfigField(DefType, SOCKET_BASE_URL, '\"ws://base_url.com\"')
+            buildConfigField(rootProject.ext.DefType, rootProject.ext.API_BASE_URL, '\"http://base_url.com\"')
+            buildConfigField(rootProject.ext.DefType, rootProject.ext.SOCKET_BASE_URL, '\"ws://base_url.com\"')
 
             applicationId = rootProject.ext.applicationId + ".stage"
 
@@ -86,8 +86,8 @@ android {
 
         product {
 
-            buildConfigField(DefType, API_BASE_URL, '\"https://base_url.com\"')
-            buildConfigField(DefType, SOCKET_BASE_URL, '\"ws://base_url.com\"')
+            buildConfigField(rootProject.ext.DefType, rootProject.ext.API_BASE_URL, '\"https://base_url.com\"')
+            buildConfigField(rootProject.ext.DefType, rootProject.ext.SOCKET_BASE_URL, '\"ws://base_url.com\"')
             applicationId = rootProject.ext.applicationId
 
         }

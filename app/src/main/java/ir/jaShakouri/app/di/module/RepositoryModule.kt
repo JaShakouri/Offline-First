@@ -1,22 +1,14 @@
 package ir.jaShakouri.app.di.module
 
+import dagger.Binds
 import dagger.Module
-import dagger.Provides
-import ir.jaShakouri.data.api.ApiInterface
-import ir.jaShakouri.data.local.dataBase.dao.ItemDao
-import ir.jaShakouri.data.repository.finder.FinderRepository
-import javax.inject.Singleton
+import ir.jaShakouri.data.repository.finder.FindRepo
+import ir.jaShakouri.domain.model.DataResponse
 
 @Module
-class RepositoryModule {
+abstract class RepositoryModule {
 
-    @Singleton
-    @Provides
-    fun provideFindRepository(apiInterface: ApiInterface, itemDao: ItemDao): FinderRepository {
-        return FinderRepository(
-            apiInterface,
-            itemDao
-        )
-    }
+    @Binds
+    abstract fun provideFindRepository(finder : FindRepo<DataResponse>): FindRepo<DataResponse>
 
 }
